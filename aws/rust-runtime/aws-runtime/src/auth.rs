@@ -16,6 +16,7 @@ use aws_smithy_types::config_bag::{ConfigBag, FrozenLayer, Layer, Storable, Stor
 use aws_smithy_types::Document;
 use aws_types::region::{Region, SigningRegion, SigningRegionSet};
 use aws_types::SigningName;
+use std::borrow::Cow;
 use std::error::Error as StdError;
 use std::fmt;
 use std::time::Duration;
@@ -119,6 +120,25 @@ impl fmt::Debug for SigV4SessionTokenNameOverride {
 }
 
 impl Storable for SigV4SessionTokenNameOverride {
+    type Storer = StoreReplace<Self>;
+}
+
+/// Custom config that provides additional excluded headers for [`SigningSettings`]
+#[derive(Debug)]
+pub struct SigV4AdditionalExcludedHeaders {
+    additional_excluded_headers: Vec<Cow<'static, str>>,
+}
+
+impl SigV4AdditionalExcludedHeaders {
+    /// Creates a new `SigV4AdditionalExcludedHeaders`
+    pub fn new(additional_excluded_headers: Vec<Cow<'static, str>>) -> Self {
+        Self {
+            additional_excluded_headers,
+        }
+    }
+}
+
+impl Storable for SigV4AdditionalExcludedHeaders {
     type Storer = StoreReplace<Self>;
 }
 
